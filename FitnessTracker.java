@@ -17,11 +17,12 @@ public class FitnessTracker {
             System.out.println("\nMenu:");
             System.out.println("1. Add Workout");
             System.out.println("2. View Workouts");
+            System.out.println("3. View Workouts by Category");
             System.out.println("3. Exit");
             System.out.print("Choose an option: ");
 
             int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            scanner.nextLine();
 
             switch (choice) {
                 case 1:
@@ -31,14 +32,17 @@ public class FitnessTracker {
                     viewWorkouts();
                     break;
                 case 3:
+                    viewWorkoutsByCategory();
+                case 4:
                     running = false;
                     break;
+
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
         }
 
-        System.out.println("Goodbye! Be Consistent!");
+        System.out.println("Goodbye! Stay Consistent <3");
     }
 
     private static void logWorkout() {
@@ -54,9 +58,12 @@ public class FitnessTracker {
         System.out.print("Notes: ");
         String notes = scanner.nextLine();
 
+        System.out.print("Workout Category: ");
+        String category = scanner.nextLine();
+
         LocalDate date = LocalDate.now();
 
-        Workout workout = new Workout(name, duration, calories, notes, date);
+        Workout workout = new Workout(name, duration, calories, notes, date), category;
         workouts.add(workout);
         saveWorkoutToFile(workout);
 
@@ -71,6 +78,24 @@ public class FitnessTracker {
                 System.out.println(w);
                 System.out.println("---------------------");
             }
+        }
+    }
+
+    private static void viewWorkoutsByCategory() {
+        System.out.print("Enter category to filter by: ");
+        String category = scanner.nextLine();
+
+        boolean found = false;
+        for (Workout w : workouts) {
+            if (w.getCategory().equalsIgnoreCase(category)) {
+                System.out.println(w);
+                System.out.println("---------------------");
+                found = true;
+            }
+        }
+
+        if (!found) {
+            System.out.println("No workouts found in this category.");
         }
     }
 
@@ -91,12 +116,13 @@ public class FitnessTracker {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length == 5) {
+                if (parts.length == 6) {
                     String name = parts[0];
                     int duration = Integer.parseInt(parts[1]);
                     int calories = Integer.parseInt(parts[2]);
                     String notes = parts[3];
                     LocalDate date = LocalDate.parse(parts[4]);
+                    String category = parts[5];
                     workouts.add(new Workout(name, duration, calories, notes, date));
                 }
             }

@@ -6,13 +6,15 @@ public class Workout {
     private int caloriesBurned;
     private String notes;
     private LocalDate date;
+    private String category;
 
-    public Workout(String name, int duration, int caloriesBurned, String notes, LocalDate date) {
+    public Workout(String name, int duration, int caloriesBurned, String notes, LocalDate date, String category) {
         this.name = name;
         this.duration = duration;
         this.caloriesBurned = caloriesBurned;
         this.notes = notes;
         this.date = date;
+        this.category = category;
     }
 
     @Override
@@ -29,6 +31,10 @@ public class Workout {
                duration + "," +
                caloriesBurned + "," +
                notes + "," +
-               date;
+               date + "," +
+               category;
+    }
+    public String getCategory() {
+        return category;
     }
 }
