@@ -18,27 +18,20 @@ public class FitnessTracker {
             System.out.println("1. Add Workout");
             System.out.println("2. View Workouts");
             System.out.println("3. View Workouts by Category");
-            System.out.println("3. Exit");
+            System.out.println("4. Weekly Summary");
+            System.out.println("5. Exit");
             System.out.print("Choose an option: ");
 
             int choice = scanner.nextInt();
             scanner.nextLine();
 
             switch (choice) {
-                case 1:
-                    logWorkout();
-                    break;
-                case 2:
-                    viewWorkouts();
-                    break;
-                case 3:
-                    viewWorkoutsByCategory();
-                case 4:
-                    running = false;
-                    break;
-
-                default:
-                    System.out.println("Invalid choice. Please try again.");
+                case 1 -> logWorkout();
+                case 2 -> viewWorkouts();
+                case 3 -> viewWorkoutsByCategory();
+                case 4 -> showWeeklySummary();
+                case 5 -> running = false;
+                default -> System.out.println("Invalid choice. Please try again.");
             }
         }
 
@@ -63,7 +56,7 @@ public class FitnessTracker {
 
         LocalDate date = LocalDate.now();
 
-        Workout workout = new Workout(name, duration, calories, notes, date), category;
+        Workout workout = new Workout(name, duration, calories, notes, date, category);
         workouts.add(workout);
         saveWorkoutToFile(workout);
 
@@ -99,6 +92,25 @@ public class FitnessTracker {
         }
     }
 
+    private static void showWeeklySummary() {
+        LocalDate today = LocalDate.now();
+        LocalDate weekStart = today.minusDays(today.getDayOfWeek().getValue() - 1);
+
+        int totalDuration = 0;
+        int totalCalories = 0;
+
+        for (Workout w : workouts) {
+            if (w.getDate().isAfter(weekStart.minusDays(1))) {
+                totalDuration += w.getDuration();
+                totalCalories += w.getCaloriesBurned();
+            }
+        }
+
+        System.out.println("Weekly Summary:");
+        System.out.println("Total Duration: " + totalDuration + " minutes");
+        System.out.println("Total Calories Burned: " + totalCalories);
+    }
+
     private static void saveWorkoutToFile(Workout workout) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME, true))) {
             writer.write(workout.toCSV());
@@ -123,7 +135,7 @@ public class FitnessTracker {
                     String notes = parts[3];
                     LocalDate date = LocalDate.parse(parts[4]);
                     String category = parts[5];
-                    workouts.add(new Workout(name, duration, calories, notes, date));
+                    workouts.add(new Workout(name, duration, calories, notes, date, category));
                 }
             }
         } catch (IOException e) {

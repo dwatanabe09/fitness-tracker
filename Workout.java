@@ -23,7 +23,8 @@ public class Workout {
                "\nDuration: " + duration + " minutes" +
                "\nCalories Burned: " + caloriesBurned +
                "\nNotes: " + notes +
-               "\nDate: " + date;
+               "\nDate: " + date +
+               "\nCategory: " + category;
     }
 
     public String toCSV() {
@@ -37,4 +38,17 @@ public class Workout {
     public String getCategory() {
         return category;
     }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public int getCaloriesBurned() {
+        return caloriesBurned;
+    }
+}
 }
